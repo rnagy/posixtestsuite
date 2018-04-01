@@ -30,6 +30,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <sys/mman.h>
+#include <sys/stat.h>
 #include <fcntl.h>
 #include <sys/wait.h>
 #include <stdlib.h>

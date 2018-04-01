@@ -18,14 +18,14 @@
 * This sample test aims to check the following assertion:
 *
 *  sem_unlink will return -1 and set errno to ENAMETOOLONG when the semaphore
-* name length is greater than PATH_MAX or a component length is greater than
-* NAME_MAX.
+* name length is greater than pmax or a component length is greater than
+* nmax.
 
 * The steps are:
-* -> If PATH_MAX is positive,
-*    -> create a semaphore with a name bigger than PATH_MAX.
+* -> If pmax is positive,
+*    -> create a semaphore with a name bigger than pmax.
 *    -> if the creation succeeds, try to unlink. It should fail.
-* -> If NAME_MAX is positive, do similar test.
+* -> If nmax is positive, do similar test.
 
 * The test fails if the ENAMETOOLONG is not returned.
 * It also FAILS if this error is returned, as it means we can create a semaphore
@@ -93,23 +93,23 @@ int main( int argc, char * argv[] )
 {
 	int ret, error;
 	sem_t * sem;
-	long PATH_MAX, NAME_MAX;
+	long pmax, nmax;
 	char * sem_name;
 
 	/* Initialize output */
 	output_init();
 
-	/* Get PATH_MAX value */
-	PATH_MAX = pathconf( "/", _PC_PATH_MAX );
+	/* Get pmax value */
+	pmax = pathconf( "/", _PC_PATH_MAX );
 
 #if VERBOSE > 0
-	output( "PATH_MAX: %ld\n", PATH_MAX );
+	output( "pmax: %ld\n", pmax );
 #endif
 
-	if ( PATH_MAX > 0 )
+	if ( pmax > 0 )
 	{
-		/* create a semaphore with a name longer than PATH_MAX */
-		sem_name = calloc( PATH_MAX + 1, sizeof( char ) );
+		/* create a semaphore with a name longer than pmax */
+		sem_name = calloc( pmax + 1, sizeof( char ) );
 
 		if ( sem_name == NULL )
 		{
@@ -119,9 +119,9 @@ int main( int argc, char * argv[] )
 		/* the space was allocated */
 		sem_name[ 0 ] = '/';
 
-		sem_name[ PATH_MAX ] = '\0';
+		sem_name[ pmax ] = '\0';
 
-		memset( sem_name + 1, 'P', PATH_MAX - 1 );
+		memset( sem_name + 1, 'P', pmax - 1 );
 
 		/* Create the semaphore */
 		sem = sem_open( sem_name, O_CREAT, 0777, 1 );
@@ -153,18 +153,18 @@ int main( int argc, char * argv[] )
 
 	}
 
-	/* Get NAME_MAX value */
-	NAME_MAX = pathconf( "/", _PC_NAME_MAX );
+	/* Get nmax value */
+	nmax = pathconf( "/", _PC_NAME_MAX );
 
 #if VERBOSE > 0
-	output( "NAME_MAX: %ld\n", NAME_MAX );
+	output( "nmax: %ld\n", nmax );
 
 #endif
 
-	if ( NAME_MAX > 0 )
+	if ( nmax > 0 )
 	{
-		/* create a semaphore with a name longer than NAME_MAX */
-		sem_name = calloc( NAME_MAX + 2, sizeof( char ) );
+		/* create a semaphore with a name longer than nmax */
+		sem_name = calloc( nmax + 2, sizeof( char ) );
 
 		if ( sem_name == NULL )
 		{
@@ -174,9 +174,9 @@ int main( int argc, char * argv[] )
 		/* the space was allocated */
 		sem_name[ 0 ] = '/';
 
-		sem_name[ NAME_MAX + 1 ] = '\0';
+		sem_name[ nmax + 1 ] = '\0';
 
-		memset( sem_name + 1, 'N', NAME_MAX );
+		memset( sem_name + 1, 'N', nmax );
 
 		/* Create the semaphore */
 		sem = sem_open( sem_name, O_CREAT , 0777, 1 );

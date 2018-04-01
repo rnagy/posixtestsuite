@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # Copyright (c) 2005, Wipro Technologies Ltd. All rights reserved.
 # Created by:  Dr. B. Thangaraju <balat.raju@wipro.com>
